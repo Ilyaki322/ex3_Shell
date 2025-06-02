@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.26)
 
-project ()
+project (ex3_shell)
 set (MY_AUTHORS "Ilya Kirshtein")
 
 include (cmake/CompilerSettings.cmake)
