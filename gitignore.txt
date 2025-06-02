@@ -30,3 +30,34 @@
 *.exe
 *.out
 *.app
+
+# Ignore build files and compiled binaries
+/build
+/Chess/build
+/Chess/out
+/CMakeCache.txt
+/CMakeFiles/
+/*.o
+/*.a
+/*.so
+/*.exe
+/*.out
+
+# Ignore IDE and editor configuration files
+.vs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore GitHub Actions temporary files
+.github/workflows/*.log
+.github/workflows/*.cache
+
+# Ignore debugging and log files
+*.log
+*.tmp
+*.bak
+
+# Ignore temporary image cache
+img/cache/
