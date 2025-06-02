@@ -14,6 +14,6 @@ void lsCommand::execute(std::vector<std::string> args)
     }
 }
 
-bool lsCommand::m_isRegistered = CommandFactory::registerCommand("ls", [](const Shell& s) {
+bool lsCommand::m_isRegistered = CommandFactory::registerCommand("lss", [](const Shell& s) {
     return std::make_unique<lsCommand>(s);
 });

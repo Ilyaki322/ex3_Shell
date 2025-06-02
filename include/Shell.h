@@ -14,7 +14,10 @@ public:
     std::filesystem::path getCurrPath() const;
 
 private:
-    void runCommand(std::string command);
+    std::vector<std::string> split(const std::string& s, char delimiter);
+    char** vecToArgv(const std::vector<std::string>& args);
+    void executeCommand(const std::vector<std::string>& args);
+    void runCommand(std::vector<std::string> command);
 
 
     std::filesystem::path m_currPath;
