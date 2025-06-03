@@ -6,7 +6,7 @@
 #include "CommandFactory.h"
 
 Shell::Shell()
-    : m_currPath(std::getenv("HOME")), m_username(std::getenv("USER"))
+    : m_username(std::getenv("USER"))
 {
     char hostname[256];
     gethostname(hostname, sizeof(hostname));
@@ -44,7 +44,7 @@ std::string Shell::getUserAndPath() const
     return std::string(m_username + "@" + m_host + ":" + path + "$ ");
 }
 
-std::vector<std::string> Shell::split(const std::string &s, char delimiter)
+std::vector<std::string> Shell::split(const std::string &s, char delimiter) const
 {
     std::vector<std::string> tokens;
     std::stringstream ss(s);
@@ -58,7 +58,7 @@ std::vector<std::string> Shell::split(const std::string &s, char delimiter)
 }
 
 // make sure to free argv!
-char **Shell::vecToArgv(const std::vector<std::string> &args)
+char **Shell::vecToArgv(const std::vector<std::string> &args) const
 {
     char** argv = new char*[args.size() + 1];
     for (int i = 0; i < args.size(); i++) {
@@ -110,7 +110,8 @@ void Shell::runCommand(std::vector<std::string> command)
 
     // executable
     if (command[0][0] == '/' || command[0].substr(0, 2) == "./") {
-        runExecutable(command);
+        //runExecutable(command);
+        m_commandMap["/"]->execute(command);
         return;
     }
 
@@ -126,34 +127,33 @@ void Shell::runCommand(std::vector<std::string> command)
     else perror("fork");
 }
 
-void Shell::runExecutable(std::vector<std::string> command)
-{
-    std::filesystem::path file = command[0];
-    std::filesystem::path fullPath = std::filesystem::absolute(file);
+// void Shell::runExecutable(std::vector<std::string> command)
+// {
+//     std::filesystem::path file = command[0];
+//     std::filesystem::path fullPath = std::filesystem::absolute(file);
 
-    if (!std::filesystem::is_regular_file(fullPath)) {
-        std::cout << fullPath.string() << " is not an executable\n";
-        return;
-    }
-    if (access(fullPath.c_str(), X_OK) != 0)  {
-        std::cout << "Access Denied\n";
-        return;
-    }
+//     if (!std::filesystem::is_regular_file(fullPath)) {
+//         std::cout << fullPath.string() << " is not an executable\n";
+//         return;
+//     }
+//     if (access(fullPath.c_str(), X_OK) != 0)  {
+//         std::cout << "Access Denied\n";
+//         return;
+//     }
 
-    pid_t pid = fork();
-    if (pid == 0) {
-        std::vector<std::string> argv = command;
-        argv[0] = fullPath.string();
-        char** c_argv = vecToArgv(argv);
-        execv(fullPath.c_str(), c_argv);
-        perror("execv");
-        for (size_t i = 0; i < argv.size(); ++i) free(c_argv[i]);
-        delete[] c_argv;
-        exit(1);
-    }
-    else if (pid > 0 && command[0][command[0].size()-1] != '&') {
-        waitpid(pid, nullptr, 0);
-    }
-    else if (pid == -1) perror("fork");
-
-}
+//     pid_t pid = fork();
+//     if (pid == 0) {
+//         std::vector<std::string> argv = command;
+//         argv[0] = fullPath.string();
+//         char** c_argv = vecToArgv(argv);
+//         execv(fullPath.c_str(), c_argv);
+//         perror("execv");
+//         for (size_t i = 0; i < argv.size(); ++i) free(c_argv[i]);
+//         delete[] c_argv;
+//         exit(1);
+//     }
+//     else if (pid > 0 && command[0][command[0].size()-1] != '&') {
+//         waitpid(pid, nullptr, 0);
+//     }
+//     else if (pid == -1) perror("fork");
+// }
