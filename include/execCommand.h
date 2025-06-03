@@ -1,6 +1,9 @@
 #pragma once
 #include "Command.h"
 
+/*
+* Encapsulates logic for './' or '/' commands
+*/
 class execCommand : public Command {
 public:
     execCommand(const Shell& s) : Command(s) {}

@@ -6,6 +6,10 @@
 #include "Command.h"
 #include "ProcessManager.h"
 
+/*
+* The main 'Shell' class, responsibe for user input and directing the commands 
+* to the correct place.
+*/
 class Shell {
 public:
     Shell();
@@ -21,7 +25,6 @@ public:
 private:
     void executeCommand(const std::vector<std::string>& args);
     void runCommand(std::vector<std::string> command);
-    //void runExecutable(std::vector<std::string> command);
 
     std::string m_username;
     std::string m_host;

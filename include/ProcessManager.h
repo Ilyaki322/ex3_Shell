@@ -8,6 +8,9 @@ struct process_data {
     std::string _command;
 };
 
+/*
+* Responsible for tracking processes of the shell.
+*/
 class ProcessManager {
 public:
     void addProcess(pid_t id, std::string command);

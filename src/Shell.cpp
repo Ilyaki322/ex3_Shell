@@ -16,6 +16,9 @@ Shell::Shell()
     m_commandMap = cf.createAllCommands(*this);
 }
 
+/**
+ * Main loop of the Program.
+ */
 void Shell::run()
 {
     std::string command;
@@ -32,6 +35,9 @@ void Shell::run()
     }
 }
 
+/**
+ * @return string with {username}@{system} as gotten from system calls
+ */
 std::string Shell::getUserAndPath() const
 {
     std::string path;
@@ -44,6 +50,13 @@ std::string Shell::getUserAndPath() const
     return std::string(m_username + "@" + m_host + ":" + path + "$ ");
 }
 
+/**
+ * Utility function to split a line by delimiter
+ * 
+ * @param s string to split
+ * @param delimiter char to split by
+ * @return vector of strings that got split.
+ */
 std::vector<std::string> Shell::split(const std::string &s, char delimiter) const
 {
     std::vector<std::string> tokens;
@@ -57,7 +70,14 @@ std::vector<std::string> Shell::split(const std::string &s, char delimiter) cons
     return tokens;
 }
 
-// make sure to free argv!
+/**
+ * Utility function.
+ * System calls use char**
+ * **REQUIRED TO BE FREED!**
+ * 
+ * @param args a vector of strings to convert to char**
+ * @return char** of given vector of strings.
+ */
 char **Shell::vecToArgv(const std::vector<std::string> &args) const
 {
     char** argv = new char*[args.size() + 1];
@@ -69,6 +89,11 @@ char **Shell::vecToArgv(const std::vector<std::string> &args) const
     return argv;
 }
 
+/**
+ * executes a linux command, searches in PATH for the command and execs it.
+ * 
+ * @param args full command with arguments
+ */
 void Shell::executeCommand(const std::vector<std::string> &args)
 {
     if (args.empty()) return;
@@ -100,9 +125,14 @@ void Shell::executeCommand(const std::vector<std::string> &args)
     std::cerr << "Command not found: " << command << "\n";
 }
 
+/**
+ * Sends the command to correct 'executor'
+ * 
+ * @param command full command with arguments.
+ */
 void Shell::runCommand(std::vector<std::string> command)
 {
-    // if built in command
+    // built in command
     if (m_commandMap.find(command[0]) != m_commandMap.end()) {
         m_commandMap[command[0]]->execute(command);
         return;
@@ -110,7 +140,6 @@ void Shell::runCommand(std::vector<std::string> command)
 
     // executable
     if (command[0][0] == '/' || command[0].substr(0, 2) == "./") {
-        //runExecutable(command);
         m_commandMap["/"]->execute(command);
         return;
     }
@@ -126,34 +155,3 @@ void Shell::runCommand(std::vector<std::string> command)
     }
     else perror("fork");
 }
-
-// void Shell::runExecutable(std::vector<std::string> command)
-// {
-//     std::filesystem::path file = command[0];
-//     std::filesystem::path fullPath = std::filesystem::absolute(file);
-
-//     if (!std::filesystem::is_regular_file(fullPath)) {
-//         std::cout << fullPath.string() << " is not an executable\n";
-//         return;
-//     }
-//     if (access(fullPath.c_str(), X_OK) != 0)  {
-//         std::cout << "Access Denied\n";
-//         return;
-//     }
-
-//     pid_t pid = fork();
-//     if (pid == 0) {
-//         std::vector<std::string> argv = command;
-//         argv[0] = fullPath.string();
-//         char** c_argv = vecToArgv(argv);
-//         execv(fullPath.c_str(), c_argv);
-//         perror("execv");
-//         for (size_t i = 0; i < argv.size(); ++i) free(c_argv[i]);
-//         delete[] c_argv;
-//         exit(1);
-//     }
-//     else if (pid > 0 && command[0][command[0].size()-1] != '&') {
-//         waitpid(pid, nullptr, 0);
-//     }
-//     else if (pid == -1) perror("fork");
-// }

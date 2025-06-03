@@ -4,6 +4,9 @@
 
 class Shell;
 
+/*
+* An abstraction class for custom commands that linux does not give us
+*/
 class Command {
 public:
     Command(const Shell& s) : m_shell(s) {}

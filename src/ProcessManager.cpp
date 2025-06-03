@@ -3,12 +3,20 @@
 #include <sys/wait.h>
 #include <signal.h>
 
+/**
+ * Adds a child process to the list
+ * @param id pid_t of the child.
+ * @param command the command its executing.
+ */
 void ProcessManager::addProcess(pid_t id, std::string command)
 {
     process_data newData = {id, command};
     m_data.push_back(newData);
 }
 
+/**
+ * prints the status of all children.
+ */
 void ProcessManager::printStatus() const
 {
     if (m_data.size() == 0) {

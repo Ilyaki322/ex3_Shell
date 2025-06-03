@@ -7,6 +7,12 @@
 #include <sys/wait.h>
 #include <iostream>
 
+/**
+ * executes a given command, if command ends with &, will run in background.
+ * will wait otherwise.
+ * 
+ * @param args args[0] is command, others are arguments for the execution.
+ */
 void execCommand::execute(std::vector<std::string> args)
 {
     std::filesystem::path file = args[0];
@@ -46,6 +52,7 @@ void execCommand::execute(std::vector<std::string> args)
     const_cast<Shell&>(m_shell).getManager().addProcess(pid, args[0]);
 }
 
+// Registers the command at the factory.
 bool execCommand::m_isRegistered = CommandFactory::registerCommand("/", [](const Shell& s) {
     return std::make_unique<execCommand>(s);
 });

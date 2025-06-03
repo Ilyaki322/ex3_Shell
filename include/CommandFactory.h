@@ -7,6 +7,9 @@
 
 using func = std::function<std::unique_ptr<Command>(const Shell& s)>;
 
+/*
+* Factory class so we could add Commands without interfering with other classes.
+*/
 class CommandFactory {
 public:
     static bool registerCommand(std::string key, func f);
