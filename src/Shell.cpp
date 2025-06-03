@@ -44,12 +44,6 @@ std::string Shell::getUserAndPath() const
     return std::string(m_username + "@" + m_host + ":" + path + "$ ");
 }
 
-std::filesystem::path Shell::getCurrPath() const
-{
-    const std::filesystem::path copy(m_currPath);
-    return copy;
-}
-
 std::vector<std::string> Shell::split(const std::string &s, char delimiter)
 {
     std::vector<std::string> tokens;

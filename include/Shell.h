@@ -11,7 +11,6 @@ public:
 
     void run();
     std::string getUserAndPath() const;
-    std::filesystem::path getCurrPath() const;
 
 private:
     std::vector<std::string> split(const std::string& s, char delimiter);
