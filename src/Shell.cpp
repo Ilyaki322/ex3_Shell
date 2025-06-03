@@ -114,6 +114,12 @@ void Shell::runCommand(std::vector<std::string> command)
         return;
     }
 
+    // executable
+    if (command[0][0] == '/' || command[0].substr(0, 2) == "./") {
+        runExecutable(command);
+        return;
+    }
+
     // linux command
     pid_t pid = fork();
     if (pid == 0) {
@@ -124,4 +130,36 @@ void Shell::runCommand(std::vector<std::string> command)
         waitpid(pid, nullptr, 0);
     }
     else perror("fork");
+}
+
+void Shell::runExecutable(std::vector<std::string> command)
+{
+    std::filesystem::path file = command[0];
+    std::filesystem::path fullPath = std::filesystem::absolute(file);
+
+    if (!std::filesystem::is_regular_file(fullPath)) {
+        std::cout << fullPath.string() << " is not an executable\n";
+        return;
+    }
+    if (access(fullPath.c_str(), X_OK) != 0)  {
+        std::cout << "Access Denied\n";
+        return;
+    }
+
+    pid_t pid = fork();
+    if (pid == 0) {
+        std::vector<std::string> argv = command;
+        argv[0] = fullPath.string();
+        char** c_argv = vecToArgv(argv);
+        execv(fullPath.c_str(), c_argv);
+        perror("execv");
+        for (size_t i = 0; i < argv.size(); ++i) free(c_argv[i]);
+        delete[] c_argv;
+        exit(1);
+    }
+    else if (pid > 0 && command[0][command[0].size()-1] != '&') {
+        waitpid(pid, nullptr, 0);
+    }
+    else if (pid == -1) perror("fork");
+
 }

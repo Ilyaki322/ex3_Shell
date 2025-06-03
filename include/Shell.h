@@ -19,6 +19,8 @@ private:
     void executeCommand(const std::vector<std::string>& args);
     void runCommand(std::vector<std::string> command);
 
+    void runExecutable(std::vector<std::string> command);
+
 
     std::filesystem::path m_currPath;
     std::string m_username;
