@@ -14,7 +14,7 @@ struct process_data {
 class ProcessManager {
 public:
     void addProcess(pid_t id, std::string command);
-    void printStatus() const;
+    void printStatus();
 private:
     std::vector<process_data> m_data;
 };

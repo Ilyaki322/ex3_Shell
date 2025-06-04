@@ -4,7 +4,9 @@
 
 void myjobsCommand::execute(std::vector<std::string> args)
 {
-    m_shell.getManager().printStatus();
+    // Base Command class has const Shell&,
+    // printStatus deletes processes that finished after print
+    const_cast<Shell&>(m_shell).getManager().printStatus();
 }
 
 // Registers the command at the factory.

@@ -16,24 +16,29 @@ void ProcessManager::addProcess(pid_t id, std::string command)
 
 /**
  * prints the status of all children.
+ * deletes ones that finished.
  */
-void ProcessManager::printStatus() const
+void ProcessManager::printStatus()
 {
     if (m_data.size() == 0) {
         std::cout << "No Jobs currently running\n";
         return;
     }
     
-    for (const auto& process : m_data) {
-        pid_t result = waitpid(process._pid, nullptr, WNOHANG);
+    for (size_t i = 0; i < m_data.size();) {
+        pid_t result = waitpid(m_data[i]._pid, nullptr, WNOHANG);
 
-        if (result == 0) 
-            std::cout << "PID " << process._pid << " (" << process._command << "): Running\n";
-        
-        else if (result == -1) {
-            std::cout << "PID " << process._pid << " (" << process._command << "): Error checking status\n";
+        if (result == 0) {
+            std::cout << "PID " << m_data[i]._pid << " (" << m_data[i]._command << "): Running\n";
+            i++;
         }
-        else 
-            std::cout << "PID " << process._pid << " (" << process._command << "): Exited\n";
+        else if (result == -1) {
+            std::cout << "PID " << m_data[i]._pid << " (" << m_data[i]._command << "): Error checking status\n";
+            i++;
+        }
+        else {
+            std::cout << "PID " << m_data[i]._pid << " (" << m_data[i]._command << "): Exited\n";
+            m_data.erase(m_data.begin() + i);
+        }
     }
 }
