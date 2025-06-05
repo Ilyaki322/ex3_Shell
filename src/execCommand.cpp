@@ -15,6 +15,7 @@
  */
 void execCommand::execute(std::vector<std::string> args)
 {
+    std::cout << args[0] << "\n";
     std::filesystem::path file = args[0];
     std::filesystem::path fullPath = std::filesystem::absolute(file);
 
@@ -39,6 +40,7 @@ void execCommand::execute(std::vector<std::string> args)
         argv[0] = fullPath.string();
         char** c_argv = m_shell.vecToArgv(argv);
         execv(fullPath.c_str(), c_argv);
+
         perror("execv");
         for (size_t i = 0; i < argv.size(); ++i) free(c_argv[i]);
         delete[] c_argv;
@@ -49,7 +51,8 @@ void execCommand::execute(std::vector<std::string> args)
     }
     else if (pid == -1) perror("fork");
 
-    const_cast<Shell&>(m_shell).getManager().addProcess(pid, args[0]);
+    if (args[0][args[0].size()-1] == '&')
+        const_cast<Shell&>(m_shell).getManager().addProcess(pid, args[0]);
 }
 
 // Registers the command at the factory.
