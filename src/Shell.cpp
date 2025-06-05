@@ -107,18 +107,21 @@ void Shell::executeCommand(const std::vector<std::string> &args)
     std::vector<std::string> paths = split(path, ':');
     std::string command = args[0];
 
+    bool amp = false;
+    if (command.back() == '&') {
+        amp = true;
+        command.pop_back();
+    }
+
     for (const std::string& dir : paths) {
         std::string fullpath = dir + "/" + command;
         if (access(fullpath.c_str(), X_OK) == 0) {
             std::vector<std::string> argv = args;
+            if (amp) command += "&";
             argv[0] = fullpath;
-            char** c_argv = vecToArgv(argv);
-            execv(fullpath.c_str(), c_argv);
-            perror("execv");
-
-            for (size_t i = 0; i < argv.size(); ++i) free(c_argv[i]);
-            delete[] c_argv;
-            exit(1);
+            std::cout << fullpath << std::endl;
+            m_commandMap["/"]->execute(argv);
+            return;
         }
     }
 
@@ -144,14 +147,6 @@ void Shell::runCommand(std::vector<std::string> command)
         return;
     }
 
-    // linux command
-    pid_t pid = fork();
-    if (pid == 0) {
-        executeCommand(command);
-        exit(0);
-    }
-    else if (pid > 0) {
-        waitpid(pid, nullptr, 0);
-    }
-    else perror("fork");
+    // not buildin and not executable, search $PATH
+    executeCommand(command);
 }
