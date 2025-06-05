@@ -39,3 +39,17 @@ implementation of custom made commands for the shell.
 
 'exit' or ctrl+c to exit.
 
+
+## How to compile and run:
+
+in the ex3_Shell directory: create a build directory (mkdir build)
+then type in terminal:
+
+cd build
+
+cmake ..
+
+build (or make)
+
+./ex3_shell
+
