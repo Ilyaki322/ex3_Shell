@@ -19,15 +19,19 @@ Responsible for user input and sending the command to the correct executioner, w
 or running an executable.
 
 ProcessManager.h && ProcessManager.cpp:
+
 Responsible for tracking processes that run with '&' at the end of the exec command.
 
 Command.h && Command.cpp:
+
 Abstract base class for all custom made commands.
 
 CommandFactory.h && CommandFactory.cpp:
+
 Factory for custom made commands.
 
 cdCommand, execCommand, myjobsCommand.h && .cpp:
+
 implementation of custom made commands for the shell.
 
 ## Remarks for the examiner:
