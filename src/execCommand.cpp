@@ -15,7 +15,6 @@
  */
 void execCommand::execute(std::vector<std::string> args)
 {
-    std::cout << args[0] << "\n";
     std::filesystem::path file = args[0];
     std::filesystem::path fullPath = std::filesystem::absolute(file);
 
