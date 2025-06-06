@@ -119,7 +119,6 @@ void Shell::executeCommand(const std::vector<std::string> &args)
             std::vector<std::string> argv = args;
             if (amp) command += "&";
             argv[0] = fullpath;
-            std::cout << fullpath << std::endl;
             m_commandMap["/"]->execute(argv);
             return;
         }
