@@ -24,7 +24,7 @@ public:
 
 private:
     void executeCommand(const std::vector<std::string>& args);
-    void runCommand(std::vector<std::string> command);
+    void runCommand(const std::vector<std::string>& command);
 
     std::string m_username;
     std::string m_host;

@@ -119,7 +119,6 @@ void Shell::executeCommand(const std::vector<std::string> &args)
             std::vector<std::string> argv = args;
             if (amp) command += "&";
             argv[0] = fullpath;
-            std::cout << fullpath << std::endl;
             m_commandMap["/"]->execute(argv);
             return;
         }
@@ -133,7 +132,7 @@ void Shell::executeCommand(const std::vector<std::string> &args)
  * 
  * @param command full command with arguments.
  */
-void Shell::runCommand(std::vector<std::string> command)
+void Shell::runCommand(const std::vector<std::string>& command)
 {
     // built in command
     if (m_commandMap.find(command[0]) != m_commandMap.end()) {
