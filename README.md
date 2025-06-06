@@ -39,6 +39,11 @@ implementation of custom made commands for the shell.
 
 'exit' or ctrl+c to exit.
 
+to run in background use '&' at the end of first argument
+for example: ./test& arg_a arg_b
+
+fixed it to work normally in second part
+
 
 ## How to compile and run:
 
