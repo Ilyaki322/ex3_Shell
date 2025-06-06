@@ -71,6 +71,34 @@ std::vector<std::string> Shell::split(const std::string &s, char delimiter) cons
 }
 
 /**
+ * Checks if a command can is in $PATH
+ * 
+ * @param command command to check
+ * @return full path of the command, or "" if not found.
+ */
+std::string Shell::findInPATH(const std::string &command) const
+{
+    std::string returnCommand = command;
+
+    const char* path = std::getenv("PATH");
+    if (!path) {
+        std::cerr << "PATH not set \n";
+        return "";
+    }
+
+    std::vector<std::string> paths = split(path, ':');
+
+    for (const std::string& dir : paths) {
+        std::string fullpath = dir + "/" + returnCommand;
+        if (access(fullpath.c_str(), X_OK) == 0) {
+            return fullpath;
+        }
+    }
+
+    return "";
+}
+
+/**
  * Utility function.
  * System calls use char**
  * **REQUIRED TO BE FREED!**
@@ -98,33 +126,15 @@ void Shell::executeCommand(const std::vector<std::string> &args)
 {
     if (args.empty()) return;
 
-    const char* path = std::getenv("PATH");
-    if (!path) {
-        std::cerr << "PATH not set \n";
+    std::string inPath = findInPATH(args[0]);
+    if (inPath != "") {
+        std::vector<std::string> argv = args;
+        argv[0] = inPath;
+        m_commandMap["/"]->execute(argv);
         return;
     }
 
-    std::vector<std::string> paths = split(path, ':');
-    std::string command = args[0];
-
-    bool amp = false;
-    if (command.back() == '&') {
-        amp = true;
-        command.pop_back();
-    }
-
-    for (const std::string& dir : paths) {
-        std::string fullpath = dir + "/" + command;
-        if (access(fullpath.c_str(), X_OK) == 0) {
-            std::vector<std::string> argv = args;
-            if (amp) command += "&";
-            argv[0] = fullpath;
-            m_commandMap["/"]->execute(argv);
-            return;
-        }
-    }
-
-    std::cerr << "Command not found: " << command << "\n";
+    std::cerr << "Command not found: " << args[0] << "\n";
 }
 
 /**

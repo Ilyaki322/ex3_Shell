@@ -18,6 +18,7 @@ public:
     std::string getUserAndPath() const;
     char** vecToArgv(const std::vector<std::string>& args) const;
     std::vector<std::string> split(const std::string& s, char delimiter) const;
+    std::string findInPATH(const std::string& command) const;
 
     ProcessManager& getManager() { return m_pcManager;}
     const ProcessManager& getManager() const { return m_pcManager;}
