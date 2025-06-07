@@ -20,10 +20,12 @@ Added functionality of input / output redirection with '>' and '<':
 
 ./test < t.txt > t2.txt combines the two, test will use t.txt as input and t2.txt as output.
 
-Added functionality of pipes with '|'
+Added functionality of pipes with '|':
 
 Chain commands together like ./a | ./b | ./c
+
 output of a will go to b, output of b will go to c ...
+
 Supports OUTPUT redirection for last command ONLY.
 
 ## Created Files:
