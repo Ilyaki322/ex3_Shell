@@ -39,6 +39,16 @@ void execCommand::pipeExec(std::vector<std::string> args)
     std::vector<std::vector<std::string>> commands;
     std::vector<std::string> temp;
 
+    bool background = false;
+    if (args.back() == "&") {
+        background = true;
+        args.pop_back();
+    }
+    if (args.back().back() == '&') {
+        background = true;
+        args.back().pop_back();
+    }
+
     // split commands by '|'
     for (int i = 0; i < args.size(); i++) {
         if (args[i] != "|") {
@@ -67,9 +77,18 @@ void execCommand::pipeExec(std::vector<std::string> args)
             }
         }
 
+        // check redirections for first and last.
         m_redirectIn = m_redirectOut = false;
-        if (i == commands.size() - 1) checkRedirection(commands[i]);
+        if (i == commands.size() - 1) {
+            checkRedirection(commands[i]);
+            m_redirectIn = false;
+        }
+        if (i == 0) {
+            checkRedirection(commands[i]);
+            m_redirectOut = false;
+        }
 
+        // fork and setup pipes
         pid_t pid = fork();
         if (pid == 0) {
             if (i > 0) {
@@ -102,9 +121,17 @@ void execCommand::pipeExec(std::vector<std::string> args)
         prevPipe[1] = newPipe[1];
     }
 
-    for (const auto& id : pids) {
-        waitpid(id, nullptr, 0);
+    if (!background) {
+        for (const auto& id : pids) {
+            waitpid(id, nullptr, 0);
+        }
     }
+    else {
+        for (int i = 0; i < pids.size() ; i++) {
+            const_cast<Shell&>(m_shell).getManager().addProcess(pids[i], commands[i][0]);
+        }
+    }
+
 }
 
 /**
