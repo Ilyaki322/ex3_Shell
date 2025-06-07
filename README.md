@@ -12,6 +12,17 @@ capable of running programs in PATH$ ( such as echo, ls, etc...)
 running custom made cd, myjobs.
 and running executable files
 
+Added functionality of input / output redirection with '>' and '<':
+./test > t.txt redirects the output of test to t.txt, will create t.txt if doesnt exist.
+./test < t.txt redirects the input of test from t.txt, will fail if t.txt doesnt exist.
+./test < t.txt > t2.txt combines the two, test will use t.txt as input and t2.txt as output.
+
+Added functionality of pipes with '|'
+
+Chain commands together like ./a | ./b | ./c
+output of a will go to b, output of b will go to c ...
+Supports OUTPUT redirection for last command ONLY.
+
 ## Created Files:
 
 **Shell.h && Shell.cpp:**
