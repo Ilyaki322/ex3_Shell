@@ -55,6 +55,10 @@ implementation of custom made commands for the shell.
 
 'exit' or ctrl+c to exit.
 
+& now works correctly, used as last arg or last symbol, for example:
+
+./test& or ./test & or ./test a b& or ./test a b &
+
 
 ## How to compile and run:
 
